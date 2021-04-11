@@ -29,12 +29,12 @@ Before we start the demo, let's learn how to connect Nacos Config to a Spring Cl
 		public class ProviderApplication {
 
 			public static void main(String[] args) {
-				SpringApplication.run(Application.class, args);
+				SpringApplication.run(ProviderApplication.class, args);
 			}
 
 			@RestController
 			class EchoController {
-				@RequestMapping(value = "/echo/{string}", method = RequestMethod.GET)
+				@GetMapping(value = "/echo/{string}")
 				public String echo(@PathVariable String string) {
 						return string;
 				}
@@ -72,7 +72,7 @@ Before we start the demo, let's learn how to connect Nacos Config to a Spring Cl
 
 #### Query Service
 
-Enter `http://127.0.0.1:8848/nacos/v1/ns/instances?serviceName=service-provider` in the browser address bar and click Go to, we can see that the service node has been successfully registered to Nacos Server.
+Enter `http://127.0.0.1:8848/nacos/#/serviceDetail?name=service-provider&groupName=DEFAULT_GROUP` in the browser address bar and click Go to, we can see that the service node has been successfully registered to Nacos Server.
 
 ![查询服务](https://cdn.nlark.com/lark/0/2018/png/54319/1536986288092-5cf96af9-9a26-466b-85f6-39ad1d92dfdc.png)
 
@@ -105,7 +105,7 @@ The code of `nacos-discovery-consumer-example` project will be analyzed below, d
 
 	    @FeignClient(name = "service-provider")
 	    public interface EchoService {
-	        @RequestMapping(value = "/echo/{str}", method = RequestMethod.GET)
+	        @GetMapping(value = "/echo/{str}")
 	        String echo(@PathVariable("str") String str);
 	    }
 	    
@@ -123,11 +123,11 @@ The code of `nacos-discovery-consumer-example` project will be analyzed below, d
 		    @Autowired
 		    private EchoService echoService;
 		
-		    @RequestMapping(value = "/echo-rest/{str}", method = RequestMethod.GET)
+		    @GetMapping(value = "/echo-rest/{str}")
 		    public String rest(@PathVariable String str) {
 		        return restTemplate.getForObject("http://service-provider/echo/" + str, String.class);
 		    }
-		    @RequestMapping(value = "/echo-feign/{str}", method = RequestMethod.GET)
+		    @GetMapping(value = "/echo-feign/{str}")
 		    public String feign(@PathVariable String str) {
 		        return echoService.echo(str);
 		    }
@@ -207,6 +207,7 @@ Metadata|spring.cloud.nacos.discovery.metadata||Extended data, Configure using M
 log name|spring.cloud.nacos.discovery.log-name||
 endpoint|spring.cloud.nacos.discovery.endpoint||The domain name of a service, through which the server address can be dynamically obtained.
 Integration Ribbon|ribbon.nacos.enabled|true|
+enabled|spring.cloud.nacos.discovery.enabled|true|The switch to enable or disable nacos service discovery
 
 
 
