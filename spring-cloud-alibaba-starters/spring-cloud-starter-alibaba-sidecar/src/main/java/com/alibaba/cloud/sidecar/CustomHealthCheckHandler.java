@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package com.alibaba.cloud.examples;
-
-import org.apache.dubbo.config.annotation.DubboService;
+package com.alibaba.cloud.sidecar;
 
 /**
- * @author fangjian
+ * @author yuhuangbin
  */
-@DubboService(version = "${foo.service.version}", application = "${dubbo.application.id}",
-		protocol = "${dubbo.protocol.id}", registry = "${dubbo.registry.id}")
-public class FooServiceImpl implements FooService {
+public interface CustomHealthCheckHandler {
 
-	@Override
-	public String hello(String name) {
-		return "hello, " + name;
-	}
+	void handler(String applicationName, SidecarInstanceInfo sidecarInstanceInfo);
 
 }
